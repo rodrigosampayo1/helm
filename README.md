@@ -12,6 +12,8 @@ https://helm.sh/docs/intro/install/
 - Add Helm repo
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm search repo bitnami
 ```
 
 - Install a chart
@@ -39,4 +41,4 @@ helm get -h
 ```
 
 ## User guide
-> https://helm.sh/docs/intro/using_helm/
+https://helm.sh/docs/intro/using_helm/
