@@ -27,3 +27,19 @@ helm status release-name
 helm show values chart-name
 
 ```
+- You can override any of these settings in a YAML formated, using values.yaml, and use multiple times
+And then use it:
+```
+helm install -f values.yaml bitnami/wordpress --generate-name
+```
+
+The helm install can install from several sources:
+- A chart repo
+- a local chart archive
+- Unpacked chart directory
+- A full URL
+
+## Upgrading a release and recovering on failure
+```
+helm upgrade -f panda.yaml happy-panda bitnami/wordpress
+```
