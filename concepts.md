@@ -16,10 +16,14 @@ helm search hub
 #or
 Helm search repo
 ```
-The first one is for charts from remote repositories, and the second one for your locals charts (added using helm repo add)
+- The first one is for charts from remote repositories, and the second one for your locals charts (added using helm repo add)
+
 
 ```
 helm status release-name
+
+```
 ```
 helm show values chart-name
+
 ```
