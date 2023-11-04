@@ -17,3 +17,5 @@ helm search hub
 Helm search repo
 ```
 The first one is for charts from remote repositories, and the second one for your locals charts (added using helm repo add)
+
+```helm status release-name
