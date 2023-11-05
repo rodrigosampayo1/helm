@@ -159,3 +159,33 @@ What makes this template a hook is the annotation:
 >   "helm.sh/hook": post-install
 
 Hook weights can be positive or negative numbers but must be represented as strings. When Helm starts the execution cycle of hooks of a particular Kind it will sort those hooks in ascending order.
+
+### Chart tests
+- As a chart author, you may want to write some tests that validate that your chart works as expected when it is installed. 
+- These tests also help the chart consumer understand what your chart is supposed to do.
+- A test in a helm chart lives under the templates/ directory and is a job definition that specifies a container with a given command to run.
+- The job definition must contain the helm test hook annotation: helm.sh/hook: test.
+
+Example tests:
+
+- Validate that your configuration from the values.yaml file was properly injected.
+- Make sure your username and password work correctly
+- Make sure an incorrect username and password does not work
+- Assert that your services are up and correctly load balancing.
+
+You can run the pre-defined tests in Helm on a release using the command:
+> helm test <RELEASE_NAME>
+
+- Example:
+1. helm create demo
+(it creates a basic release, with Chart.yaml, values.yaml, charts/, templates/)
+- In demo/templates/tests/test-connection.yaml you'll see a test you can try.
+
+### Steps to Run a Test Suite on a Release
+1. Install the chart
+> helm install demo demo --namespace default
+
+2. helm test demo
+
+- A test is a Helm hook, so annotations like helm.sh/hook-weight and helm.sh/hook-delete-policy may be used with test resources.
+
