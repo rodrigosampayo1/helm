@@ -111,7 +111,51 @@ It allows to INTERVENE at certain points in a release's life cycle, for example:
 - Run a job before deleting a release to gracefully take a service out of rotation before removing it.
 
 Hooks are a similiar tool like templates.
+- pre-install:
+Executes after templates are rendered, but before any resources are created in K8s.
+- post-install:
+Executes after all resources are loaded into K8s.
+- pre-delete:
+Executes on a deletion request before any resources are deleted from K8s.
+- post-delete:
+Executes on a deletion request after all of the release's resources have been deleted.
+- pre-upgraded
+- Post-upgraded
+- pre-rollback
+- post-rollback
+- test
+
+Hooks allows you an opportuniyty to perform operations at strategic points in a release lifecycle.
+For example, consider the lifecycle for a helm install
+1. Users runs helm install foo
+2. Helm library install API is called
+3. The library rendes the foo templates
+4. The library loads the resulting resources into K8s
+5. The library returns the release oboject to the client
+6. The client exits.
+As Helms defines 2 hooks for install, pre and post-install, you can change the lifecycle like this:
+
+1. Users runs helm install foo
+2. Helm library install API is called
+3. CRDs in the crds/ dir are installed.
+4. The library rendes the foo templates
+5. The library prepares to execute the pre-install hooks.
+6. The library sorts hooks by weight, by resource kind and finally by name.
+7. The library then loads the hook wit the lowest weight first.
+8. The library waits unitl the hook is ready, except for CRDs
+9. The library loads the resulting resources into K8s.
+10. THe library executes the post-install hook, loading hook resources.
+11. The library waits unitl the hooks is ready.
+12. The library retunrs the release object to the client
+13. The client exits.
 
 
+### Writing a Hook
+Hooks are just Kubernetes manifest files with special annotations in the metadata section. SIMILAR to template but not same.
+Because they are template files, you can use all of the normal template features, including reading .Values, .Release, and .Template.
 
+What makes this template a hook is the annotation:
+> annotations:
+>   "helm.sh/hook": post-install
 
+Hook weights can be positive or negative numbers but must be represented as strings. When Helm starts the execution cycle of hooks of a particular Kind it will sort those hooks in ascending order.
